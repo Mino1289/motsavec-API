@@ -1,41 +1,30 @@
 require("dotenv").config();
 const app = require("express")();
-const port = process.env.PORT;
+const port = process.env.PORT || 3000;
 const lesmots = require("./data.json");
 
 app.get("/", (req, res) => {
     res.type("json");
 
     var E = lesmots;
-    var haskey = Object.keys(req.query).filter((key) => key == "key").length >= 1;
-    if (!haskey) {
-        res.status(403);
-        res.send("No key");
-        return;
-    }
     for (const [key, value] of Object.entries(req.query)) {
-        if (key == "key" && value != process.env.KEY) {
-            res.status(403);
-            res.send("Wrong key");
-            return;
-        }
         if (key == "start") {
-            E = start(value, E || lesmots);
+            E = start(value, E);
         }
         if (key == "end") {
-            E = end(value, E || lesmots);
+            E = end(value, E);
         }
         if (key == "in") {
-            E = contain(value.split(""), E || lesmots);
+            E = contain(value.split(""), E);
         }
         if (key == "nin") {
-            E = nocontain(value.split(""), E || lesmots);
+            E = nocontain(value.split(""), E);
         }
         if (key == "suite") {
-            E = suite(value, E || lesmots);
+            E = suite(value, E);
         }
         if (key == "size") {
-            E = sized(parseInt(value), E || lesmots);
+            E = sized(parseInt(value), E);
         }
     }
     res.send(E);
@@ -53,6 +42,7 @@ String.prototype.count = function (s) {
     }
     return result;
 };
+
 /**
  *
  * @param {String[]} L la liste de lettre à tester
@@ -72,6 +62,7 @@ const fil = (L, m) => {
     if (f.length == L.length) return true;
     else return false;
 };
+
 /**
  *
  * @param {String[]} L la liste de lettre à tester
@@ -88,6 +79,7 @@ const nofil = (L, m) => {
     if (f.length == 0) return true;
     else return false;
 };
+
 /**
  * @param {String[]} L Liste de lettre qui ne doivent pas etre dans le mots.
  * @param {String[]} M Les mots à filtrer
@@ -101,6 +93,7 @@ const nocontain = (L, M) => {
     });
     return E;
 };
+
 /**
  * @param {String[]} L Les lettres
  * @param {String[]} M Les mots à filtrer
@@ -114,6 +107,7 @@ const contain = (L, M) => {
     });
     return E;
 };
+
 /**
  * @param {String} s le mot commence par s
  * @param {String[]} Mots Liste des mots a filtrer
@@ -125,6 +119,7 @@ const start = (s, M) => {
     });
     return E;
 };
+
 /**
  * @param {String} s le mot fini par s
  * @param {String[]} Mots Liste des mots a filtrer
@@ -136,6 +131,7 @@ const end = (s, M) => {
     });
     return E;
 };
+
 /**
  *
  * @param {Number} n
@@ -148,6 +144,7 @@ const sized = (n, M) => {
     });
     return E;
 };
+
 /**
  * @param {String} s suite de caractère dans la liste de mot
  * @param {String[]} M liste de mot
