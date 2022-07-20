@@ -27,6 +27,7 @@ app.get("/", (req, res) => {
             E = sized(parseInt(value), E);
         }
     }
+    res.setHeader("Access-Control-Allow-Origin", "https://motsavec.herokuapp.com");
     res.send(E);
 })
 
