@@ -7,7 +7,6 @@ app.get("/", (req, res) => {
     res.type("json");
 
     var E = lesmots;
-    console.log(req.query);
     for (const [key, value] of Object.entries(req.query)) {
         if (key == "start") {
             E = start(value, E);
@@ -170,8 +169,6 @@ const suite = (s, M) => {
  * @returns 
  */
 const letters = (arr, M) => {
-    console.log(arr, arr.length);
-    M = sized(arr.length, M);
     var E = [];
     good = true;
     M.forEach((mot) => {
