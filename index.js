@@ -7,6 +7,7 @@ app.get("/", (req, res) => {
     res.type("json");
 
     var E = lesmots;
+    console.log(req.query);
     for (const [key, value] of Object.entries(req.query)) {
         if (key == "start") {
             E = start(value, E);
@@ -25,6 +26,10 @@ app.get("/", (req, res) => {
         }
         if (key == "size") {
             E = sized(parseInt(value), E);
+        }
+        if (key == "let") {
+            let arr = JSON.parse(value);
+            E = letters(arr, E);
         }
     }
     res.setHeader("Access-Control-Allow-Origin", "*");
@@ -157,6 +162,35 @@ const suite = (s, M) => {
     });
     return E;
 };
+
+/**
+ * 
+ * @param {String[]} arr liste de lettre dans un certain ordre
+ * @param {String[]} M 
+ * @returns 
+ */
+const letters = (arr, M) => {
+    console.log(arr, arr.length);
+    M = sized(arr.length, M);
+    var E = [];
+    good = true;
+    M.forEach((mot) => {
+        good = true;
+        for (let j = 0; j < arr.length; j++) {
+            if (good) {
+                if (arr[j] == "") {
+                    good = true;
+                } else if (mot[j] != arr[j]) {
+                    good = false;
+                } else {
+                    good = true;
+                }
+            }
+        }
+        if (good) E.push(mot);
+    })
+    return E;
+}
 
 
 app.listen(port, () => {
